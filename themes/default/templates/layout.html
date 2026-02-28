@@ -11,7 +11,7 @@
     (function(){var t=localStorage.getItem('ink-theme');if(t)document.documentElement.setAttribute('data-theme',t);else if(window.matchMedia('(prefers-color-scheme:dark)').matches)document.documentElement.setAttribute('data-theme','dark');})();
   </script>
 </head>
-<body>
+<body{{#if isHero}} class="ink-hero-page"{{/if}}>
   <nav class="ink-nav">
     <button class="ink-hamburger" aria-label="Menu">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>

@@ -1,0 +1,30 @@
+<div class="ink-hero">
+  {{#if hero.logo}}
+  <div class="ink-hero-logo">{{{hero.logo}}}</div>
+  {{/if}}
+  <h1 class="ink-hero-title">{{{hero.title}}}</h1>
+  {{#if hero.tagline}}
+  <p class="ink-hero-tagline">{{{hero.tagline}}}</p>
+  {{/if}}
+  {{#if hasActions}}
+  <div class="ink-hero-actions">
+    {{#each hero.actions}}
+    <a class="ink-hero-btn {{style}}" href="{{link}}">{{{text}}}</a>
+    {{/each}}
+  </div>
+  {{/if}}
+</div>
+
+{{#if hasFeatures}}
+<div class="ink-features">
+  {{#each hero.features}}
+  <div class="ink-feature">
+    {{#if icon}}<div class="ink-feature-icon">{{{icon}}}</div>{{/if}}
+    <div class="ink-feature-title">{{title}}</div>
+    <div class="ink-feature-desc">{{desc}}</div>
+  </div>
+  {{/each}}
+</div>
+{{/if}}
+
+{{{content}}}

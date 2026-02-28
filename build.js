@@ -153,20 +153,43 @@ for (const page of pages) {
   const prev = idx > 0 ? pages[idx - 1] : null;
   const next = idx < pages.length - 1 ? pages[idx + 1] : null;
 
-  const pageHtml = renderTemplate(pageTpl, {
-    content: html,
-    toc,
-    hasToc: toc.length > 0,
-    prev,
-    next,
-    hasPrev: !!prev,
-    hasNext: !!next,
-    base,
-    lastUpdated: config.themeConfig.lastUpdated ? getLastModified(page.fullPath) : ''
-  });
+  // Hero page or regular page
+  const isHero = page.frontmatter.layout === 'hero' && page.frontmatter.hero;
+  const heroTpl = loadTemplate('hero.html');
+  let pageHtml;
+
+  if (isHero && heroTpl) {
+    const hero = page.frontmatter.hero;
+    // Resolve action links with basePath
+    if (hero.actions) {
+      hero.actions = hero.actions.map(a => ({
+        ...a,
+        link: a.link.startsWith('http') ? a.link : `${base}${a.link}`
+      }));
+    }
+    pageHtml = renderTemplate(heroTpl, {
+      hero,
+      hasActions: !!(hero.actions && hero.actions.length),
+      hasFeatures: !!(hero.features && hero.features.length),
+      content: html,
+      base
+    });
+  } else {
+    pageHtml = renderTemplate(pageTpl, {
+      content: html,
+      toc,
+      hasToc: toc.length > 0,
+      prev,
+      next,
+      hasPrev: !!prev,
+      hasNext: !!next,
+      base,
+      lastUpdated: config.themeConfig.lastUpdated ? getLastModified(page.fullPath) : ''
+    });
+  }
 
   const fullHtml = renderTemplate(layoutTpl, {
-    title: `${title} | ${config.title}`,
+    title: isHero ? config.title : `${title} | ${config.title}`,
     description,
     language: config.language,
     base,
@@ -178,6 +201,7 @@ for (const page of pages) {
     darkMode: config.themeConfig.darkMode,
     body: pageHtml,
     currentSlug: page.slug,
+    isHero,
     footer: config.themeConfig.footer || {}
   });
 
