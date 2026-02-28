@@ -263,6 +263,7 @@ a:hover { text-decoration: underline; }
   border-radius: var(--ink-radius);
   overflow: hidden;
   background: var(--ink-code-bg);
+  border: 1px solid var(--ink-line);
 }
 .code-block pre {
   margin: 0;
