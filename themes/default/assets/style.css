@@ -177,6 +177,8 @@ a:hover { text-decoration: underline; }
 .ink-content {
   width: 100%;
   max-width: var(--ink-content-w);
+  min-width: 0;
+  overflow-x: hidden;
 }
 
 /* ── TOC (right sidebar) ─────────────────────── */
