@@ -6,15 +6,16 @@
   window.inkCopyCode = function (btn) {
     var code = btn.parentElement.querySelector('code');
     if (!code) return;
+    var block = btn.closest('.code-block');
     navigator.clipboard.writeText(code.textContent).then(function () {
       var orig = btn.innerHTML;
       btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg><span style="font-size:11px;margin-left:2px">Copied!</span>';
-      btn.style.opacity = '1';
       btn.style.color = 'var(--ink-accent)';
+      if (block) block.classList.add('copied');
       setTimeout(function () {
         btn.innerHTML = orig;
-        btn.style.opacity = '';
         btn.style.color = '';
+        if (block) block.classList.remove('copied');
       }, 1500);
     });
   };

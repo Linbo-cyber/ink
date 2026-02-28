@@ -236,6 +236,7 @@ for (const page of pages) {
       hasPrev: !!prev,
       hasNext: !!next,
       base,
+      editLink: config.themeConfig.editLink ? config.themeConfig.editLink + page.relPath : '',
       lastUpdated: config.themeConfig.lastUpdated ? getLastModified(page.fullPath) : ''
     });
   }

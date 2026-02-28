@@ -36,7 +36,7 @@
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-html { scroll-behavior: smooth; scroll-padding-top: calc(var(--ink-nav-h) + 16px); }
+html { scroll-behavior: smooth; scroll-padding-top: calc(var(--ink-nav-h) + 16px); scrollbar-gutter: stable; }
 
 body {
   font-family: var(--ink-font);
@@ -146,6 +146,7 @@ a:hover { text-decoration: underline; }
   color: var(--ink-muted);
   transition: color .15s, background .15s;
   position: relative;
+  border-radius: 0 6px 6px 0;
 }
 .ink-sidebar-item:hover { color: var(--ink-text); background: rgba(0,0,0,.03); text-decoration: none; }
 [data-theme="dark"] .ink-sidebar-item:hover { background: rgba(255,255,255,.03); }
@@ -299,7 +300,9 @@ a:hover { text-decoration: underline; }
   font-size: 11px;
   color: var(--ink-muted);
   text-transform: uppercase;
+  transition: opacity .15s;
 }
+.code-block.copied .code-lang { opacity: 0; }
 .code-copy {
   position: absolute;
   top: 8px;
@@ -308,14 +311,12 @@ a:hover { text-decoration: underline; }
   border: none;
   cursor: pointer;
   color: var(--ink-muted);
-  opacity: 0;
-  transition: opacity .15s, color .15s;
+  transition: color .15s;
   padding: 4px;
   display: inline-flex;
   align-items: center;
   font-family: var(--ink-font);
 }
-.code-block:hover .code-copy { opacity: 1; }
 .code-copy:hover { color: var(--ink-text); }
 
 /* ── Table ───────────────────────────────────── */
@@ -641,6 +642,18 @@ a:hover { text-decoration: underline; }
   text-align: center;
 }
 
+/* ── Edit Link ───────────────────────────────── */
+.ink-edit-link { margin-top: 32px; }
+.ink-edit-link a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--ink-muted);
+  transition: color .15s;
+}
+.ink-edit-link a:hover { color: var(--ink-accent); text-decoration: none; }
+
 /* ── Last updated ────────────────────────────── */
 .ink-last-updated { font-size: 13px; color: var(--ink-muted); margin-top: 32px; }
 
@@ -719,9 +732,9 @@ a:hover { text-decoration: underline; }
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 12px 28px;
+  padding: 8px 20px;
   border-radius: var(--ink-radius);
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
   font-family: var(--ink-font);
   cursor: pointer;
