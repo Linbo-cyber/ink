@@ -1,0 +1,31 @@
+{{{content}}}
+
+{{#if lastUpdated}}
+<div class="ink-last-updated">最后更新：{{lastUpdated}}</div>
+{{/if}}
+
+{{#if hasToc}}
+<nav class="ink-toc">
+  <div class="ink-toc-title">目录</div>
+  {{#each toc}}
+  <a href="#{{id}}" class="toc-h{{level}}">{{text}}</a>
+  {{/each}}
+</nav>
+{{/if}}
+
+<div class="ink-prev-next">
+  {{#if hasPrev}}
+  <a href="{{base}}/{{prev.outPath}}">
+    <span class="label">← 上一页</span>
+    <span class="title">{{prev.frontmatter.title}}</span>
+  </a>
+  {{else}}
+  <span></span>
+  {{/if}}
+  {{#if hasNext}}
+  <a class="next" href="{{base}}/{{next.outPath}}">
+    <span class="label">下一页 →</span>
+    <span class="title">{{next.frontmatter.title}}</span>
+  </a>
+  {{/if}}
+</div>

@@ -1,0 +1,27 @@
+{
+  "name": "ink-docs",
+  "version": "1.0.0",
+  "description": "极简文档框架 — 4 个依赖，200ms 构建，VitePress 的轻量替代",
+  "main": "build.js",
+  "bin": {
+    "ink": "bin/ink.js"
+  },
+  "scripts": {
+    "build": "node build.js",
+    "dev": "node bin/ink.js dev",
+    "clean": "node bin/ink.js clean"
+  },
+  "keywords": ["docs", "documentation", "static-site", "markdown", "vitepress-alternative"],
+  "author": "Lin Bo <linbo.work@outlook.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Linbo-cyber/ink.git"
+  },
+  "dependencies": {
+    "marked": "^15.0.0",
+    "gray-matter": "^4.0.3",
+    "chokidar": "^4.0.0",
+    "feed": "^4.2.2"
+  }
+}

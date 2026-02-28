@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="{{language}}" data-base="{{base}}">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{title}}</title>
+  <meta name="description" content="{{description}}" />
+  <link rel="stylesheet" href="{{base}}/assets/style.css" />
+  <link rel="icon" href="{{base}}/assets/favicon.svg" type="image/svg+xml" />
+  <script>
+    (function(){var t=localStorage.getItem('ink-theme');if(t)document.documentElement.setAttribute('data-theme',t);else if(window.matchMedia('(prefers-color-scheme:dark)').matches)document.documentElement.setAttribute('data-theme','dark');})();
+  </script>
+</head>
+<body>
+  <nav class="ink-nav">
+    <button class="ink-hamburger" aria-label="Menu">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+    </button>
+    <a class="ink-nav-logo" href="{{base}}/">{{config.title}}</a>
+    {{#if hasNav}}
+    <div class="ink-nav-links">
+      {{#each nav}}
+      <a href="{{link}}">{{text}}</a>
+      {{/each}}
+    </div>
+    {{/if}}
+    <div class="ink-nav-right">
+      {{#if search}}
+      <button class="ink-search-btn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        搜索
+        <kbd>Ctrl+K</kbd>
+      </button>
+      {{/if}}
+      {{#if darkMode}}
+      <button class="ink-theme-toggle" aria-label="Toggle theme"></button>
+      {{/if}}
+    </div>
+  </nav>
+
+  <div class="ink-layout">
+    <aside class="ink-sidebar">
+      {{#each sidebar}}
+      {{#if items}}
+      <div class="ink-sidebar-group">
+        <div class="ink-sidebar-title">{{text}}</div>
+        {{#each items}}
+        <a class="ink-sidebar-item" href="{{link}}">{{text}}</a>
+        {{/each}}
+      </div>
+      {{else}}
+      <a class="ink-sidebar-item" href="{{link}}">{{text}}</a>
+      {{/if}}
+      {{/each}}
+    </aside>
+
+    <main class="ink-main">
+      <div class="ink-content">
+        {{{body}}}
+      </div>
+    </main>
+  </div>
+
+  <footer class="ink-footer">
+    {{footer.message}}{{#if footer.copyright}} · {{footer.copyright}}{{/if}}
+  </footer>
+
+  {{#if search}}
+  <div class="ink-search-overlay">
+    <div class="ink-search-box">
+      <input class="ink-search-input" type="text" placeholder="搜索文档..." />
+      <div class="ink-search-results"></div>
+    </div>
+  </div>
+  {{/if}}
+
+  <script src="{{base}}/assets/ink.js"></script>
+</body>
+</html>
