@@ -74,9 +74,10 @@ a:hover { text-decoration: underline; }
 }
 .ink-nav-logo:hover { text-decoration: none; }
 
-.ink-nav-links { display: flex; gap: 20px; flex: 1; }
-.ink-nav-links a { color: var(--ink-muted); font-size: 14px; }
+.ink-nav-links { display: flex; gap: 20px; flex: 1; align-items: center; }
+.ink-nav-links a { color: var(--ink-muted); font-size: 14px; display: inline-flex; align-items: center; }
 .ink-nav-links a:hover { color: var(--ink-text); text-decoration: none; }
+.ink-nav-links a svg { display: block; }
 
 .ink-nav-right { display: flex; align-items: center; gap: 12px; }
 
@@ -143,8 +144,9 @@ a:hover { text-decoration: underline; }
   display: block;
   padding: 5px 20px 5px 28px;
   color: var(--ink-muted);
-  transition: color .15s, background .15s;
+  transition: color .15s, background .15s, border-color .15s;
   border-left: 2px solid transparent;
+  border-radius: 0 4px 4px 0;
 }
 .ink-sidebar-item:hover { color: var(--ink-text); background: rgba(0,0,0,.03); text-decoration: none; }
 [data-theme="dark"] .ink-sidebar-item:hover { background: rgba(255,255,255,.03); }
@@ -196,6 +198,7 @@ a:hover { text-decoration: underline; }
   padding: 4px 0 4px 12px;
   color: var(--ink-muted);
   border-left: 2px solid transparent;
+  border-radius: 0 4px 4px 0;
   margin-left: -1px;
   transition: color .15s, border-color .15s;
   line-height: 1.5;
@@ -289,16 +292,24 @@ a:hover { text-decoration: underline; }
   cursor: pointer;
   color: var(--ink-muted);
   opacity: 0;
-  transition: opacity .15s;
+  transition: opacity .15s, color .15s;
   padding: 4px;
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--ink-font);
 }
 .code-block:hover .code-copy { opacity: 1; }
 .code-copy:hover { color: var(--ink-text); }
 
 /* ── Table ───────────────────────────────────── */
-.table-wrap { overflow-x: auto; margin: 0 0 16px; }
-.ink-content table { width: 100%; border-collapse: collapse; font-size: 14px; border-radius: var(--ink-radius); overflow: hidden; }
-.ink-content th { background: var(--ink-sidebar-bg); font-weight: 600; text-align: left; padding: 10px 14px; border-bottom: 2px solid var(--ink-line); }
+.table-wrap {
+  overflow-x: auto;
+  margin: 0 0 16px;
+  border: 1px solid var(--ink-line);
+  border-radius: var(--ink-radius);
+}
+.ink-content table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.ink-content th { background: var(--ink-sidebar-bg); font-weight: 600; text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--ink-line); }
 .ink-content td { padding: 10px 14px; border-bottom: 1px solid var(--ink-line); }
 .ink-content tr:last-child td { border-bottom: none; }
 
@@ -390,7 +401,9 @@ a:hover { text-decoration: underline; }
   font-size: 14px;
   color: var(--ink-muted);
   border-bottom: 2px solid transparent;
+  border-radius: 4px 4px 0 0;
   font-family: var(--ink-font);
+  transition: color .15s, border-color .15s;
 }
 .ink-tab-btn:hover { color: var(--ink-text); }
 .ink-tab-btn.active { color: var(--ink-accent); border-bottom-color: var(--ink-accent); }
@@ -454,17 +467,39 @@ a:hover { text-decoration: underline; }
   flex-direction: column;
 }
 
+.ink-search-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--ink-line);
+}
+
 .ink-search-input {
-  width: 100%;
-  padding: 14px 16px;
+  flex: 1;
+  padding: 2px 0;
   border: none;
   outline: none;
   font-size: 16px;
   background: transparent;
   color: var(--ink-text);
   font-family: var(--ink-font);
-  border-bottom: 1px solid var(--ink-line);
 }
+
+.ink-search-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px; height: 28px;
+  border: 1px solid var(--ink-line);
+  border-radius: 6px;
+  background: var(--ink-sidebar-bg);
+  cursor: pointer;
+  color: var(--ink-muted);
+  flex-shrink: 0;
+  transition: border-color .15s, color .15s;
+}
+.ink-search-close:hover { border-color: var(--ink-accent); color: var(--ink-text); }
 
 .ink-search-results {
   overflow-y: auto;
@@ -721,6 +756,8 @@ a:hover { text-decoration: underline; }
 .ink-feature-icon {
   font-size: 28px;
   margin-bottom: 12px;
+  color: var(--ink-accent);
+  line-height: 1;
 }
 
 .ink-feature-title {

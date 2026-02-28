@@ -2,6 +2,23 @@
 (function () {
   'use strict';
 
+  // ── Code Copy ──────────────────────────────────
+  window.inkCopyCode = function (btn) {
+    var code = btn.parentElement.querySelector('code');
+    if (!code) return;
+    navigator.clipboard.writeText(code.textContent).then(function () {
+      var orig = btn.innerHTML;
+      btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg><span style="font-size:11px;margin-left:2px">Copied!</span>';
+      btn.style.opacity = '1';
+      btn.style.color = 'var(--ink-accent)';
+      setTimeout(function () {
+        btn.innerHTML = orig;
+        btn.style.opacity = '';
+        btn.style.color = '';
+      }, 1500);
+    });
+  };
+
   // ── Theme Toggle ──────────────────────────────
   var themeBtn = document.querySelector('.ink-theme-toggle');
   var stored = localStorage.getItem('ink-theme');
