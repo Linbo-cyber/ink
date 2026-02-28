@@ -127,10 +127,18 @@ for (const page of pages) {
   headings.length = 0;
 
   let html = page.content;
+  // Protect fenced code blocks from container/component processing
+  const codeBlocks = [];
+  html = html.replace(/^(`{3,})[^\n]*\n[\s\S]*?^\1\s*$/gm, (match) => {
+    codeBlocks.push(match);
+    return `<!--CODE_BLOCK_${codeBlocks.length - 1}-->`;
+  });
   // Containers: ::: tip/warning/danger/info [title]
   html = processContainers(html);
   // Components: {% %}
   html = processComponents(html);
+  // Restore code blocks
+  html = html.replace(/<!--CODE_BLOCK_(\d+)-->/g, (_, i) => codeBlocks[parseInt(i)]);
   // Markdown
   html = marked.parse(html);
   // Auto-spacing CJK
@@ -263,13 +271,20 @@ function buildSidebar(pages) {
 }
 
 function processContainers(md) {
+  const icons = {
+    tip: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>',
+    warning: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>',
+    danger: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>',
+    info: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>'
+  };
   return md.replace(/^:::\s*(tip|warning|danger|info|details)(?:\[([^\]]*)\])?\s*\n([\s\S]*?)^:::\s*$/gm, (_, type, title, body) => {
     const titles = { tip: '提示', warning: '警告', danger: '危险', info: '信息', details: '详情' };
     const t = title || titles[type] || type;
     if (type === 'details') {
       return `<details class="ink-details"><summary>${t}</summary>\n\n${body.trim()}\n\n</details>`;
     }
-    return `<div class="ink-container ink-${type}"><p class="container-title">${t}</p>\n\n${body.trim()}\n\n</div>`;
+    const icon = icons[type] || '';
+    return `<div class="ink-container ink-${type}"><p class="container-title">${icon}${t}</p>\n\n${body.trim()}\n\n</div>`;
   });
 }
 
@@ -302,6 +317,44 @@ function processComponents(md) {
     html += '</div>';
     return html;
   });
+
+  // Music player: {% player src="..." title="..." artist="..." %}
+  md = md.replace(/\{%\s*player\s+([\s\S]*?)%\}/g, (_, attrs) => {
+    const get = (k, d) => { const m = attrs.match(new RegExp(k + '="([^"]*)"')); return m ? m[1] : d || ''; };
+    const src = get('src', '');
+    const title = get('title', '未知曲目');
+    const artist = get('artist', '');
+    const uid = 'player_' + Math.random().toString(36).slice(2, 7);
+    let html = `<div class="ink-player" id="${uid}">`;
+    html += `<button class="ink-player-btn" onclick="inkPlayerToggle('${uid}')"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg></button>`;
+    html += '<div class="ink-player-info">';
+    html += `<div class="ink-player-title">${title}</div>`;
+    if (artist) html += `<div class="ink-player-artist">${artist}</div>`;
+    html += '</div>';
+    html += '<div class="ink-player-progress">';
+    html += `<span class="ink-player-time" id="${uid}_cur">0:00</span>`;
+    html += `<div class="ink-player-bar" onclick="inkPlayerSeek(event,'${uid}')"><div class="ink-player-fill" id="${uid}_fill"></div></div>`;
+    html += `<span class="ink-player-time" id="${uid}_dur">0:00</span>`;
+    html += '</div>';
+    html += `<button class="ink-player-loop" onclick="inkPlayerLoop('${uid}')" title="循环"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m17 2 4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="m7 22-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/></svg></button>`;
+    html += `<audio id="${uid}_audio" src="${src}" preload="metadata"></audio>`;
+    html += '</div>';
+    return html;
+  });
+
+  // Video player: {% video src="..." caption="..." poster="..." %}
+  md = md.replace(/\{%\s*video\s+([\s\S]*?)%\}/g, (_, attrs) => {
+    const get = (k, d) => { const m = attrs.match(new RegExp(k + '="([^"]*)"')); return m ? m[1] : d || ''; };
+    const src = get('src', '');
+    const caption = get('caption', '');
+    const poster = get('poster', '');
+    let html = '<div class="ink-video">';
+    html += `<video controls${poster ? ` poster="${poster}"` : ''} preload="metadata"><source src="${src}" /></video>`;
+    if (caption) html += `<div class="ink-video-caption">${caption}</div>`;
+    html += '</div>';
+    return html;
+  });
+
   return md;
 }
 

@@ -133,3 +133,23 @@ ink.build();
 ## CJK 自动空格
 
 中文English混排会自动加空格，代码块内不受影响。
+
+## 音乐播放器
+
+```markdown
+{% player src="音频URL" title="歌名" artist="歌手" %}
+```
+
+{% player src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" title="SoundHelix Song 1" artist="SoundHelix" %}
+
+支持播放/暂停、进度条拖拽、时间显示、循环播放。
+
+## 视频播放器
+
+```markdown
+{% video src="视频URL" caption="说明文字" poster="封面图URL" %}
+```
+
+{% video src="https://www.w3schools.com/html/mov_bbb.mp4" caption="Big Buck Bunny — 示例视频" %}
+
+支持原生 HTML5 视频控件、自定义说明文字、封面图。

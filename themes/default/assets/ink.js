@@ -136,4 +136,74 @@
     }
   });
 
+  // ── Music Player ──────────────────────────────
+  var playerStates = {};
+
+  function fmtTime(s) {
+    if (isNaN(s)) return '0:00';
+    var m = Math.floor(s / 60);
+    var sec = Math.floor(s % 60);
+    return m + ':' + (sec < 10 ? '0' : '') + sec;
+  }
+
+  window.inkPlayerToggle = function (uid) {
+    var audio = document.getElementById(uid + '_audio');
+    var btn = document.querySelector('#' + uid + ' .ink-player-btn');
+    if (!audio) return;
+    if (audio.paused) {
+      // Pause all other players
+      document.querySelectorAll('.ink-player audio').forEach(function (a) {
+        if (a !== audio && !a.paused) a.pause();
+      });
+      audio.play();
+      btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
+      if (!playerStates[uid]) {
+        playerStates[uid] = true;
+        audio.addEventListener('timeupdate', function () {
+          var fill = document.getElementById(uid + '_fill');
+          var cur = document.getElementById(uid + '_cur');
+          if (fill && audio.duration) fill.style.width = (audio.currentTime / audio.duration * 100) + '%';
+          if (cur) cur.textContent = fmtTime(audio.currentTime);
+        });
+        audio.addEventListener('loadedmetadata', function () {
+          var dur = document.getElementById(uid + '_dur');
+          if (dur) dur.textContent = fmtTime(audio.duration);
+        });
+        audio.addEventListener('ended', function () {
+          var loopBtn = document.querySelector('#' + uid + ' .ink-player-loop');
+          if (loopBtn && loopBtn.classList.contains('active')) {
+            audio.currentTime = 0;
+            audio.play();
+          } else {
+            btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>';
+            var fill = document.getElementById(uid + '_fill');
+            if (fill) fill.style.width = '0%';
+          }
+        });
+        audio.addEventListener('pause', function () {
+          btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>';
+        });
+      }
+    } else {
+      audio.pause();
+    }
+  };
+
+  window.inkPlayerSeek = function (e, uid) {
+    var audio = document.getElementById(uid + '_audio');
+    var bar = e.currentTarget;
+    if (!audio || !audio.duration) return;
+    var rect = bar.getBoundingClientRect();
+    var pct = (e.clientX - rect.left) / rect.width;
+    audio.currentTime = pct * audio.duration;
+  };
+
+  window.inkPlayerLoop = function (uid) {
+    var btn = document.querySelector('#' + uid + ' .ink-player-loop');
+    var audio = document.getElementById(uid + '_audio');
+    if (!btn || !audio) return;
+    btn.classList.toggle('active');
+    audio.loop = btn.classList.contains('active');
+  };
+
 })();
