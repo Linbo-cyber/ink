@@ -424,10 +424,12 @@ function processComponents(md) {
     const src = get('src', '');
     const caption = get('caption', '');
     const poster = get('poster', '');
+    const uid = 'video_' + Math.random().toString(36).slice(2, 7);
     let html = '<div class="ink-video">';
-    html += `<video controls${poster ? ` poster="${poster}"` : ''} preload="metadata"><source src="${src}" /></video>`;
+    html += `<div class="ink-video-container" id="${uid}"></div>`;
     if (caption) html += `<div class="ink-video-caption">${caption}</div>`;
     html += '</div>';
+    html += `<script>document.addEventListener('DOMContentLoaded',function(){if(typeof Artplayer!=='undefined'){new Artplayer({container:'#${uid}',url:'${src}'${poster ? ",poster:'" + poster + "'" : ''},volume:0.7,autoSize:true,fullscreen:true,fullscreenWeb:true,pip:true,playbackRate:true,aspectRatio:true,setting:true,theme:'var(--ink-accent)',lang:navigator.language.startsWith('zh')?'zh-cn':'en'});}});</script>`;
     return html;
   });
 
