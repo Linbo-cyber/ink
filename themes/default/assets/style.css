@@ -113,6 +113,7 @@ a:hover { text-decoration: underline; }
   display: flex;
   margin-top: var(--ink-nav-h);
   min-height: calc(100vh - var(--ink-nav-h));
+  overflow-x: hidden;
 }
 
 /* ── Sidebar ─────────────────────────────────── */
@@ -169,6 +170,8 @@ a:hover { text-decoration: underline; }
 .ink-main {
   margin-left: var(--ink-sidebar-w);
   flex: 1;
+  min-width: 0;
+  overflow-x: hidden;
   display: flex;
   justify-content: center;
   padding: 32px 24px 64px;
